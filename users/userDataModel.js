@@ -23,36 +23,23 @@ const UserSchema = mongoose.Schema({
     type: String,
     default:'',
   },
-  lifts:{
-    deadlift:{
-      type: Number,
-      default: 0
-    },
-    bench:{
-      type: Number,
-      default: 0
-    },
-    squat:{
-      type: Number,
-      default: 0
-    },
-  },
 });
 
-UserSchema.methods.serialize = function () {
-  return{
-    username: this.username || '',
-    firstName: this.firstName || '',
-    lastName: this.lastName || '',
-    lifts: this.lifts || '',
-  };
-};
+
+UserSchema.set('toObject', {
+  transform: function(doc, ret){
+    ret.it = ret._id;
+    delete ret._id;
+    delete ret.__v;
+    delete ret.password;
+  }
+});
 
 UserSchema.methods.validatePassword = function(password) {
   return bcrypt.compare(password, this.passowrd);
 };
 
-UserSchema.statics.hasPassword = function(password) {
+UserSchema.statics.hashPassword = function(password) {
   return bcrypt.hash(password, 10);
 };
 
