@@ -6,9 +6,9 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
-const {User} = require('./userDataModel');
+const User = require('./userDataModel');
 
-router.post('/', jsonParser, (req, res) => {
+router.post('/', jsonParser, (req, res, next) => {
   // const requiredFields = ['username', 'password'];
   // const missingField = requiredFields.find(field => !(field in req.body));
 
@@ -100,18 +100,14 @@ router.post('/', jsonParser, (req, res) => {
         lastName
       });
     })
-    .then(user => {
-      return res.status(201).json(user.serialize());
+    .then(user => { 
+      res
+        .status(201)
+        .json(user);
     })
     .catch(err => {
-      if (err.reason === 'ValidationError'){
-        return res.status(err.code).json(err);
-      }
-      res.status(500).json({
-        code: 500,
-        message:'Internal server error'
-      });
+      next(err);
     });
 });
 
-module.exports = {router};
+module.exports = router;

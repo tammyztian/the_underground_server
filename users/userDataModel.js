@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-const UserSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -26,23 +26,23 @@ const UserSchema = mongoose.Schema({
 });
 
 
-UserSchema.set('toObject', {
+userSchema.set('toObject', {
   transform: function(doc, ret){
-    ret.it = ret._id;
+    ret.id = ret._id;
     delete ret._id;
     delete ret.__v;
     delete ret.password;
   }
 });
 
-UserSchema.methods.validatePassword = function(password) {
+userSchema.methods.validatePassword = function(password) {
   return bcrypt.compare(password, this.passowrd);
 };
 
-UserSchema.statics.hashPassword = function(password) {
+userSchema.statics.hashPassword = function(password) {
   return bcrypt.hash(password, 10);
 };
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = {User};
+module.exports = User;
