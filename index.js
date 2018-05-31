@@ -2,10 +2,10 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+//const cors = require('cors');
 const morgan = require('morgan');
 
-const { usersRouter } = require('./users');
+const { router } = require('./users/router.js');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
@@ -19,13 +19,17 @@ app.use(
   })
 );
 
-app.use(
-  cors({
-    origin: CLIENT_ORIGIN
-  })
-);
+app.use((req, res, next) => { 
+  res.header('Access-Control-Allow-Origin', '*'); 
+  res.header('Access-Control-Allow-Credentials','true'); 
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization'); 
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
 
-app.use('/api/users/', usersRouter);
+  if(req.method === 'OPTIONS') { return res.sendStatus(204); } return next(); 
+
+});
+
+app.use('/api/users', router);
 
 
 function runServer(port = PORT) {
