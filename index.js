@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
 //const cors = require('cors');
 const morgan = require('morgan');
 const passport = require('passport');
@@ -11,7 +11,7 @@ const { dbConnect } = require('./db-mongoose');
 
 //import auth 
 const authRouter = require('./auth/router');
-const localStrategy = require('./auth/strategies');
+const {localStrategy, jwtStrategy} = require('./auth/strategies')
 
 const userRouter = require('./users/router');
 const liftingDataRouter = require('./liftingData/router');
@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 });
 
 passport.use(localStrategy);
-//passport.use(jwtStrategy);
+passport.use(jwtStrategy);
 
 
 
