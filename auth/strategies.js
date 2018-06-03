@@ -1,10 +1,10 @@
 'use strict';
 
 const {Strategy: LocalStrategy} = require('passport-local');
-const mongoose = require('mongoose');
-
+const {Strategy: JwtStrategy, ExtractJwt} = require('passport-jwt');
 
 const User = require('../users/userDataModel');
+const {JWT_SECRET} = require('../config');
 
 const localStrategy = new LocalStrategy((username, password, done) =>{
   let user;
@@ -41,4 +41,13 @@ const localStrategy = new LocalStrategy((username, password, done) =>{
     });
 });
 
-module.exports = localStrategy;
+const jwtStrategy = new JwtStrategy(
+  {secretOrKey: JWT_SECRET,
+    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
+  },
+  (payload, done) => {
+    done(null, payload.user);
+  }
+);
+
+module.exports = {localStrategy, jwtStrategy};
