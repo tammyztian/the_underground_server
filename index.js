@@ -1,16 +1,20 @@
 'use strict';
 
 const express = require('express');
-//const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 //const cors = require('cors');
 const morgan = require('morgan');
-
-const userRouter = require('./users/router.js');
-const liftingDataRouter = require('./liftingData/router.js');
+const passport = require('passport');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-// const {dbConnect} = require('./db-knex');
+
+//import auth 
+const authRouter = require('./auth/router');
+const localStrategy = require('./auth/strategies');
+
+const userRouter = require('./users/router');
+const liftingDataRouter = require('./liftingData/router');
 
 //create express app
 const app = express();
@@ -33,8 +37,14 @@ app.use((req, res, next) => {
 
 });
 
+passport.use(localStrategy);
+//passport.use(jwtStrategy);
+
+
+
 //mount routers
-app.use('/api/users', userRouter);
+app.use('/api/user', userRouter);
+app.use('/api', authRouter);
 app.use('/api/lifts', liftingDataRouter);
 
 //catch all 404
