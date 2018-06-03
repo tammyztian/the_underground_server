@@ -1,42 +1,44 @@
 'use strict';
+
 const {Strategy: LocalStrategy} = require('passport-local');
-const {Strategy: JwtStrategy, ExtractJwt} = require('passport-jwt');
+const mongoose = require('mongoose');
 
-const {User} = require('../users/userDataModel');
-const {JWT_SECRET} = require('../config');
 
-const localstrategy = new localStrategy ((username, password, callback) =>{
+const User = require('../users/userDataModel');
+
+const localStrategy = new LocalStrategy((username, password, done) =>{
   let user;
-  //define user to make accecssable outside call
-  User.findOne({username: username})
-    .then(_user=>{
-      user =_user;
-      if (!user){
+  console.log(username);
+  User.findOne({username})
+    .then(result => {
+      user = result;
+      if(!user){
         return Promise.reject({
-          reason: 'LoginError',
-          message:'Incorrect username or password'
+          reason: 'Login error',
+          message: 'Incorrect username',
+          location:'username'
         });
-      }
-      return user.validatePassword(password);
+      } 
+    
+      return  user.validatePassword(password);
+
     })
     .then(isValid => {
       if (!isValid) {
         return Promise.reject({
-          reason: 'LoginError',
-          message:'Incorrect username or password'
+          reason: 'Login error',
+          message: 'Incorrect password',
+          location: 'password'
         });
       }
-      return callback(null, user);
+      return done (null, user);
     })
     .catch(err => {
-      if (err.reason === 'LoginError'){
-        return callback(null, false, err);
+      if (err.reason === 'Login error'){
+        return done (null, false);
       }
-      return callback(err, false);
+      return done(err);
     });
 });
 
-const jwtstrategy =;
-
-
-module.exports = {localstrategy, jwtstrategy};
+module.exports = localStrategy;
