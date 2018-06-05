@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-//const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 //const cors = require('cors');
 const morgan = require('morgan');
 const passport = require('passport');
@@ -15,6 +15,7 @@ const {localStrategy, jwtStrategy} = require('./auth/strategies')
 
 const userRouter = require('./users/router');
 const liftingDataRouter = require('./liftingData/router');
+const programRouter = require('./program/router');
 
 //create express app
 const app = express();
@@ -44,8 +45,10 @@ passport.use(jwtStrategy);
 
 //mount routers
 app.use('/api/user', userRouter);
-app.use('/api', authRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/lifts', liftingDataRouter);
+app.use('/api/program', programRouter);
+
 
 //catch all 404
 app.use(function (req, res, next) {
