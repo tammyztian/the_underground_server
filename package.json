@@ -1,13 +1,13 @@
 {
-  "name": "the_underground_server",
+  "name": "the-underground-server",
   "version": "1.0.0",
-  "description": "underground backend",
+  "description": "Underground Backend",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "build": "react-scripts build",
-    "mocha-exit0": "mocha --exit --file ../test/setup.test.js || true",
-    "test": "node --exec npm run mocha-exit0",
+    "mocha": "mocha --exit --file ../test/setup.test.js",
+    "mocha-exit0": "mocha --exit --file test/setup.test.js || true",
+    "watch-test": "nodemon --exec npm run mocha-exit0 -timeout 5000 --bail",
     "cover": "nodemon --exec nyc --reporter=lcov --reporter=text-summary npm run mocha-exit0",
     "heroku": "node index.js",
     "travis": "npm run mocha"
@@ -18,7 +18,6 @@
     "bcrypt": "^2.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
-    "build": "^0.1.4",
     "cors": "^2.8.4",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
@@ -29,8 +28,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "pg": "^7.4.1",
-    "react-scripts": "^1.1.4"
+    "pg": "^7.4.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
