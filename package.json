@@ -1,12 +1,12 @@
 {
-  "name": "thinkful-backend-template",
+  "name": "the_underground_server",
   "version": "1.0.0",
-  "description": "Template for an Express backend",
+  "description": "underground backend",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
     "build": "react-scripts build",
-    "mocha-exit0": "mocha --exit --file test/setup.test.js || true",
+    "mocha-exit0": "mocha --exit --file ../test/setup.test.js || true",
     "test": "node --exec npm run mocha-exit0",
     "cover": "nodemon --exec nyc --reporter=lcov --reporter=text-summary npm run mocha-exit0",
     "heroku": "node index.js",
