@@ -6,6 +6,9 @@
   "scripts": {
      "start": "nodemon index.js",
       "mocha": "mocha --exit --file test/setup.test.js",
+      "mocha-exit0": "mocha --exit --file ../test/setup.test.js || true",
+      "watch-test": " --exec npm run mocha-exit0 -timeout 5000 --bail",
+
 
     "heroku": "node index.js",
     "travis": "npm run mocha"
