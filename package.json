@@ -6,7 +6,7 @@
   "scripts": {
      "start": "nodemon index.js",
       "mocha": "mocha --exit --file test/setup.test.js",
-      "mocha-exit0": "mocha --exit --file test/setup.test.js || true",
+      "mocha-exit": "mocha --exit --file test/setup.test.js || true",
       "test": "npm run mocha-exit",
 
     "heroku": "node index.js",
