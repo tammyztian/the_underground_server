@@ -15,14 +15,10 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('/api/user', function () {
-  const username = 'exampleUser';
-  const password = 'examplePass';
-  const firstName = 'Example';
-  const lastName = 'User';
-  const usernameB = 'exampleUserB';
-  const passwordB = 'examplePassB';
-  const firstNameB = 'ExampleB';
-  const lastNameB = 'UserB';
+  const username = 'SallyIam';
+  const password = 'ImaG8888088';
+  const firstName = 'Sally';
+  const lastName = 'Student';
 
   before(function () {
     return runServer(TEST_DATABASE_URL);
