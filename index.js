@@ -49,7 +49,6 @@ app.use('/api/auth', authRouter);
 app.use('/api/lifts', liftingDataRouter);
 app.use('/api/program', programRouter);
 
-
 //error for any undeclared endpoints
 app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });
