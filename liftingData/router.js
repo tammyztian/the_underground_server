@@ -18,6 +18,16 @@ const LiftingData = require('./liftingDataSchema');
 router.get('/', jsonParser, (req, res, next) => {
   const userId = req.user._id;
   let filter = {userId};
+
+  if (!userId) {
+    return res.status(422).json({
+      code: 422,
+      reason: 'Authorization Error',
+      message: 'User not logged in',
+      location: 'User'
+    });
+  }
+  
   LiftingData.find(filter)
     .then(result => {
       if (result) {
@@ -26,9 +36,7 @@ router.get('/', jsonParser, (req, res, next) => {
         next();
       }
     })
-    .catch(err => {
-      next(err);
-    });
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
 //post lifting data
@@ -36,6 +44,16 @@ router.get('/', jsonParser, (req, res, next) => {
 router.post('/', jsonParser, (req, res, next) => {
   const userId = req.user._id;
   const {deadlift, bench, squat} = req.body;
+
+  if (!userId) {
+    return res.status(422).json({
+      code: 422,
+      reason: 'Authorization Error',
+      message: 'User not logged in',
+      location: 'User'
+    });
+  }
+
   LiftingData.create({deadlift, bench, squat, userId})
     .then(result => {
       res
@@ -43,9 +61,7 @@ router.post('/', jsonParser, (req, res, next) => {
         .status(201)
         .json(result);
     })
-    .catch(err => {
-      next(err);
-    });
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
 module.exports = router;

@@ -52,7 +52,7 @@ router.post('/', jsonParser, (req, res) => {
 
   const sizedFields = {
     username: {
-      min: 1
+      min: 3
     },
     password: {
       min: 10,
@@ -121,10 +121,10 @@ router.post('/', jsonParser, (req, res) => {
     });
 });
 
-router.get('/', jsonParser,(req, res) => {
-  return User.find()
-    .then(users => res.json(users.map(user => user.serialize())))
-    .catch(err => res.status(500).json({message: 'Internal server error'}));
-});
+// router.get('/', jsonParser,(req, res) => {
+//   return User.find()
+//     .then(users => res.json(users.map(user => user.serialize())))
+//     .catch(err => res.status(500).json({message: 'Internal server error'}));
+// });
 
 module.exports = router;

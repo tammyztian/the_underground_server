@@ -13,22 +13,32 @@ const jsonParser = bodyParser.json();
 const Program = require('./programModelSchema');
 
 
-//retrieve lifting data
+//retrieve data
 
 router.get('/', jsonParser, (req, res, next) => {
   const userId = req.user._id;
   let filter = {userId};
-  Program.find(filter)
+
+  if (!userId) {
+    return res.status(422).json({
+      code: 422,
+      reason: 'Authorization Error',
+      message: 'User not logged in',
+      location: 'User'
+    });
+  }
+
+  Program.findOne(filter)
     .then(result => {
+      console.log(result)
       if (result) {
         res.json(result);
       } else {
         next();
       }
     })
-    .catch(err => {
-      next(err);
-    });
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
+
 });
 
 //post initial day
@@ -36,6 +46,25 @@ router.get('/', jsonParser, (req, res, next) => {
 router.post('/', jsonParser, (req, res, next) => {
   const userId = req.user._id;
   const {day} = req.body;
+
+  if (!userId) {
+    return res.status(422).json({
+      code: 422,
+      reason: 'Authorization Error',
+      message: 'User not logged in',
+      location: 'User'
+    });
+  }
+
+  if (typeof day !== 'number'){
+    return res.status(422).json({
+      code: 422,
+      reason: 'Bad Request',
+      message: 'Day should be a number',
+      location: 'Day'
+    });
+  }
+
   Program.create({day, userId})
     .then(result => {
       res
@@ -44,8 +73,12 @@ router.post('/', jsonParser, (req, res, next) => {
         .json(result);
     })
     .catch(err => {
-      next(err);
+      if (err.reason === 'ValidationError') {
+        return res.status(err.code).json(err);
+      }
+      res.status(500).json({code: 500, message: 'Internal server error'});
     });
+
 });
 
 //update day
@@ -55,9 +88,24 @@ router.put('/', jsonParser, (req, res, next) => {
   const {day} = req.body;
 
   const updateDay ={day};
-  console.log(req.user._id);
-  console.log(day);
-  console.log(updateDay);
+  
+  if (!userId) {
+    return res.status(422).json({
+      code: 422,
+      reason: 'Authorization Error',
+      message: 'User not logged in',
+      location: 'User'
+    });
+  }
+
+  if (typeof day !== 'number'){
+    return res.status(422).json({
+      code: 422,
+      reason: 'Bad Request',
+      message: 'Day should be a number',
+      location: 'Day'
+    });
+  }
 
 
   Program.findOneAndUpdate({userId}, updateDay, {new: true})
@@ -65,9 +113,9 @@ router.put('/', jsonParser, (req, res, next) => {
       console.log(`result ${result}`);
       res.json(result);
     })
-    .catch(err => {
-      next(err);
-    });
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
+
 });
+
 
 module.exports = router;
