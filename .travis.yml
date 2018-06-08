@@ -1,15 +1,15 @@
 language: node_js
 node_js: '8'
-cache:
-  directories:
-  - node_modules
-script:
-- npm test
-before_deploy:
-- npm install netlify-cli -g
-deploy:
-  provider: script
-  script: netlify deploy -s $NETLIFY_SITE_ID -t $NETLIFY_ACCESS_TOKEN  -p ./
-  skip_cleanup: true
-  on:
-    branch: master
+# cache:
+#   directories:
+#   - node_modules
+# script:
+# - npm test
+# before_deploy:
+# - npm install netlify-cli -g
+# deploy:
+#   provider: script
+#   script: netlify deploy -s $NETLIFY_SITE_ID -t $NETLIFY_ACCESS_TOKEN  -p ./
+#   skip_cleanup: true
+#   on:
+#     branch: master
