@@ -6,8 +6,8 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const passport = require('passport');
 
-const { PORT, CLIENT_ORIGIN } = require('./config');
-const { dbConnect } = require('./db-mongoose');
+const { PORT, DATABASE_URL} = require('./config');
+//const { dbConnect } = require('./db-mongoose');
 
 //import auth 
 const authRouter = require('./auth/router');
@@ -50,37 +50,48 @@ app.use('/api/lifts', liftingDataRouter);
 app.use('/api/program', programRouter);
 
 
-//catch all 404
-app.use(function (req, res, next) {
-  const err = new Error('Not Found');
-  err.status= 404;
-  next(err);
+//error for any undeclared endpoints
+app.use('*', (req, res) => {
+  return res.status(404).json({ message: 'Not Found' });
 });
 
-//catch-all error handler
-app.use(function (err, req, res) {
-  res.status(err.status || 500);
-  res.json({
-    message: err.message,
-    error: app.get('env') === 'development' ? err : {},
-  });
-});
+let server;
 
-//listing for incoming connections
-function runServer(port = PORT) {
-  const server = app
-    .listen(port, () => {
-      console.info(`App listening on port ${server.address().port}`);
-    })
-    .on('error', err => {
-      console.error('Express failed to start');
-      console.error(err);
+function runServer(databaseUrl, port = PORT) {
+
+  return new Promise((resolve, reject) => {
+    mongoose.connect(databaseUrl, err => {
+      if (err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+        console.log(`Your app is listening on port ${port}`);
+        resolve();
+      })
+        .on('error', err => {
+          mongoose.disconnect();
+          reject(err);
+        });
     });
+  });
+}
+
+function closeServer() {
+  return mongoose.disconnect().then(() => {
+    return new Promise((resolve, reject) => {
+      console.log('Closing server');
+      server.close(err => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  });
 }
 
 if (require.main === module) {
-  dbConnect();
-  runServer();
+  runServer(DATABASE_URL).catch(err => console.error(err));
 }
 
-module.exports =  app ;
+module.exports = { app, runServer, closeServer };
