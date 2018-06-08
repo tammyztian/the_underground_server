@@ -8,7 +8,6 @@ const {JWT_SECRET} = require('../config');
 
 const localStrategy = new LocalStrategy((username, password, done) =>{
   let user;
-  console.log(username);
   User.findOne({username})
     .then(result => {
       user = result;
