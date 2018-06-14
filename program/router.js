@@ -30,7 +30,7 @@ router.get('/', jsonParser, (req, res, next) => {
 
   Program.findOne(filter)
     .then(result => {
-      console.log(result)
+      //console.log(result)
       if (result) {
         res.json(result);
       } else {
@@ -110,7 +110,7 @@ router.put('/', jsonParser, (req, res, next) => {
 
   Program.findOneAndUpdate({userId}, updateDay, {new: true})
     .then(result => {
-      console.log(`result ${result}`);
+      //console.log(`result ${result}`);
       res.json(result);
     })
     .catch(err => res.status(500).json({message: 'Internal server error'}));
